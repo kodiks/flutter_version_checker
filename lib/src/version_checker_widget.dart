@@ -16,19 +16,20 @@ class VersionCheckerManager with WidgetStatusMixin {
     lastErrorCommand = RxCommand.createSync((error) => error);
     checkUpdateCommand = RxCommand.createAsyncNoParam(() async {
       statusLoad();
+      //* Get instaled app version
+      final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
       if (Platform.isAndroid) {
         //* Android
         final AppUpdateInfo appUpdateInfo = await InAppUpdate.checkForUpdate();
         final versionInfo = VersionInfo(
           updateAvaible: appUpdateInfo.updateAvailable,
           newVersion: appUpdateInfo.availableVersionCode.toString(),
+          appId: packageInfo.packageName,
         );
 
         return Future.value(versionInfo);
       } else {
-        //* Get instaled app version
-        final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
         //* iOS
         final iTunes = ITunesSearchAPI();
 
@@ -42,6 +43,7 @@ class VersionCheckerManager with WidgetStatusMixin {
         final versionInfo = VersionInfo(
           updateAvaible: storeVesion != localVersion,
           newVersion: storeVersionInfo,
+          appId: packageInfo.packageName,
         );
 
         return Future.value(versionInfo);
