@@ -6,9 +6,10 @@ import 'package:package_info/package_info.dart';
 import 'package:rx_command/rx_command.dart';
 import 'package:status_handler/status_handler.dart';
 import 'package:upgrader/upgrader.dart';
+import 'package:version_checker/src/version_info.dart';
 
 class VersionCheckerManager with WidgetStatusMixin {
-  RxCommand<void, bool> checkUpdateCommand;
+  RxCommand<void, VersionInfo> checkUpdateCommand;
   RxCommand<dynamic, dynamic> lastErrorCommand;
 
   VersionCheckerManager() {
@@ -18,7 +19,12 @@ class VersionCheckerManager with WidgetStatusMixin {
       if (Platform.isAndroid) {
         //* Android
         final AppUpdateInfo appUpdateInfo = await InAppUpdate.checkForUpdate();
-        return Future.value(appUpdateInfo.updateAvailable);
+        final versionInfo = VersionInfo(
+          updateAvaible: appUpdateInfo.updateAvailable,
+          newVersion: appUpdateInfo.availableVersionCode.toString(),
+        );
+
+        return Future.value(versionInfo);
       } else {
         //* Get instaled app version
         final PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -28,15 +34,20 @@ class VersionCheckerManager with WidgetStatusMixin {
 
         final results = await iTunes.lookupByBundleId(packageInfo.packageName);
 
-        final versionInfo = ITunesResults.version(results);
+        final storeVersionInfo = ITunesResults.version(results);
 
-        final int storeVesion = int.parse(versionInfo.replaceAll(".", ""));
+        final int storeVesion = int.parse(storeVersionInfo.replaceAll(".", ""));
         final int localVersion = int.parse(packageInfo.version.replaceAll(".", ""));
 
-        return Future.value(storeVesion != localVersion);
+        final versionInfo = VersionInfo(
+          updateAvaible: storeVesion != localVersion,
+          newVersion: storeVersionInfo,
+        );
+
+        return Future.value(versionInfo);
       }
     })
-      ..listen((updateAvaible) {
+      ..listen((versionInfo) {
         statusDone();
       })
       ..handleError((error) {
@@ -48,7 +59,7 @@ class VersionCheckerManager with WidgetStatusMixin {
 
 class VersionCheckerWidget extends StatefulWidget {
   final VersionCheckerManager manager;
-  final Function(bool) onUpdateAvaible;
+  final Function(VersionInfo) onUpdateAvaible;
   final Widget Function() onLoading;
   final Function(Exception) onError;
 
@@ -70,7 +81,7 @@ class _VersionCheckerWidgetState extends State<VersionCheckerWidget> {
     return WidgetStatusHandler(
       manager: widget.manager.widgetStatusManager,
       onDone: (setting) {
-        return widget.onUpdateAvaible(widget.manager.checkUpdateCommand.lastResult ?? false);
+        return widget.onUpdateAvaible(widget.manager.checkUpdateCommand.lastResult ?? VersionInfo());
       },
       onLoading: (setting) {
         if (widget.onLoading != null) {
