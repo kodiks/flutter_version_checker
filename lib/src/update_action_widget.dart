@@ -17,7 +17,7 @@ class UpdateActionWidget extends StatelessWidget {
   const UpdateActionWidget({
     Key key,
     @required this.versionInfo,
-    this.infoText = "Uygulamanın yeni versiyonu mevcut. Lütfen uygulamayı kullanmak için yeni versiyonu yükleyin.",
+    this.infoText = "Uygulamanın yeni versiyonu mevcut.\nLütfen uygulamayı kullanmak için yeni versiyonu yükleyin.",
     this.textStyle = const TextStyle(
       fontSize: 16,
     ),
@@ -35,7 +35,10 @@ class UpdateActionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            child: Text(infoText),
+            child: Text(
+              infoText,
+              style: textStyle,
+            ),
           ),
           SizedBox(
             height: 40,
