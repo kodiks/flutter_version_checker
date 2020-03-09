@@ -59,9 +59,9 @@ class VersionCheckerManager with WidgetStatusMixin {
   }
 
   String trackId(Map response) {
-    var value;
+    String value;
     try {
-      value = response['results'][0]['trackId'];
+      value = response['results'][0]['trackId'].toString();
     } catch (e) {
       print('upgrader.ITunesResults.trackId: $e');
     }
