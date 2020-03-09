@@ -53,8 +53,8 @@ class VersionCheckerManager with WidgetStatusMixin {
         statusDone();
       })
       ..handleError((error) {
-        lastErrorCommand(error);
         statusError();
+        lastErrorCommand(error);
       });
   }
 

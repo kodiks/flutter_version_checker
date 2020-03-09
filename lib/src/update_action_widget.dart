@@ -10,8 +10,10 @@ class UpdateActionWidget extends StatelessWidget {
   final String infoText;
   final TextStyle textStyle;
   final String updateButtonText;
+  final TextStyle updateButtonTextStyle;
   final String exitButonText;
-
+  final TextStyle exitButonTextStyle;
+  final EdgeInsets margin;
   const UpdateActionWidget({
     Key key,
     @required this.versionInfo,
@@ -20,12 +22,15 @@ class UpdateActionWidget extends StatelessWidget {
       fontSize: 16,
     ),
     this.updateButtonText = "Güncelle",
+    this.updateButtonTextStyle = const TextStyle(color: Colors.white),
     this.exitButonText = "Kapat",
+    this.exitButonTextStyle,
+    this.margin = const EdgeInsets.symmetric(horizontal: 16),
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16),
+      margin: margin,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -33,21 +38,25 @@ class UpdateActionWidget extends StatelessWidget {
             child: Text(infoText),
           ),
           SizedBox(
-            height: 20,
+            height: 40,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               OutlineButton(
-                child: Text(exitButonText),
+                child: Text(
+                  exitButonText,
+                  style: exitButonTextStyle,
+                ),
                 onPressed: () {
                   exit(0);
                   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                 },
               ),
               OutlineButton(
-                child: Text(updateButtonText),
+                child: Text(updateButtonText, style: updateButtonTextStyle),
                 borderSide: BorderSide(color: Colors.blue),
+                color: Colors.blue,
                 onPressed: () {
                   StoreRedirect.redirect(androidAppId: versionInfo.appId, iOSAppId: versionInfo.appId);
                 },
