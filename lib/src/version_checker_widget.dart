@@ -43,7 +43,7 @@ class VersionCheckerManager with WidgetStatusMixin {
         final versionInfo = VersionInfo(
           updateAvaible: storeVesion != localVersion,
           newVersion: storeVersionInfo,
-          appId: packageInfo.packageName,
+          appId: trackId(results),
         );
 
         return Future.value(versionInfo);
@@ -56,6 +56,16 @@ class VersionCheckerManager with WidgetStatusMixin {
         lastErrorCommand(error);
         statusError();
       });
+  }
+
+  String trackId(Map response) {
+    var value;
+    try {
+      value = response['results'][0]['trackId'];
+    } catch (e) {
+      print('upgrader.ITunesResults.trackId: $e');
+    }
+    return value;
   }
 }
 

@@ -27,14 +27,16 @@ class UpdateActionWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
             child: Text(infoText),
           ),
           SizedBox(
-            height: 15,
+            height: 20,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               OutlineButton(
                 child: Text(exitButonText),
@@ -45,6 +47,7 @@ class UpdateActionWidget extends StatelessWidget {
               ),
               OutlineButton(
                 child: Text(updateButtonText),
+                borderSide: BorderSide(color: Colors.blue),
                 onPressed: () {
                   StoreRedirect.redirect(androidAppId: versionInfo.appId, iOSAppId: versionInfo.appId);
                 },
