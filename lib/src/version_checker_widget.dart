@@ -59,9 +59,9 @@ class VersionCheckerManager with WidgetStatusMixin {
 
 class VersionCheckerWidget extends StatefulWidget {
   final VersionCheckerManager manager;
-  final Function(VersionInfo) onUpdateAvaible;
+  final Widget Function(VersionInfo) onUpdateAvaible;
   final Widget Function() onLoading;
-  final Function(Exception) onError;
+  final Widget Function(Exception) onError;
 
   const VersionCheckerWidget({Key key, @required this.manager, @required this.onUpdateAvaible, this.onLoading, this.onError}) : super(key: key);
 
@@ -92,9 +92,10 @@ class _VersionCheckerWidgetState extends State<VersionCheckerWidget> {
       },
       onError: (setting) {
         if (widget.onError != null) {
-          widget.onError(widget.manager.lastErrorCommand.lastResult);
+          return widget.onError(widget.manager.lastErrorCommand.lastResult);
+        } else {
+          return Container();
         }
-        return Container();
       },
     );
   }
