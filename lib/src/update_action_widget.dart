@@ -23,7 +23,7 @@ class UpdateActionWidget extends StatelessWidget {
       fontSize: 16,
     ),
     this.updateButtonText = "Güncelle",
-    this.updateButtonTextStyle = const TextStyle(color: Colors.white),
+    this.updateButtonTextStyle = const TextStyle(color: Colors.black),
     this.exitButonText = "Kapat",
     this.exitButonTextStyle,
     this.margin = const EdgeInsets.symmetric(horizontal: 16),
@@ -54,7 +54,13 @@ class UpdateActionWidget extends StatelessWidget {
                 borderSide: BorderSide(color: Colors.blue),
                 color: Colors.blue,
                 onPressed: () {
-                  StoreRedirect.redirect(androidAppId: versionInfo.appId, iOSAppId: versionInfo.appId);
+                  if (Platform.isAndroid) {
+                    StoreRedirect.redirect(
+                      androidAppId: versionInfo.appId,
+                    );
+                  } else if (Platform.isIOS) {
+                    StoreRedirect.redirect(iOSAppId: versionInfo.appId);
+                  }
                 },
               ),
             ],
