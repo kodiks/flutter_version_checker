@@ -8,10 +8,13 @@ import 'package:status_handler/status_handler.dart';
 import 'package:upgrader/upgrader.dart';
 
 class VersionCheckerManager with WidgetStatusMixin {
-  RxCommand<void, bool> checkUpdate;
+  RxCommand<void, bool> checkUpdateCommand;
+  RxCommand<dynamic, dynamic> lastErrorCommand;
 
   VersionCheckerManager() {
-    checkUpdate = RxCommand.createAsyncNoParam(() async {
+    lastErrorCommand = RxCommand.createSync((error) => error);
+    checkUpdateCommand = RxCommand.createAsyncNoParam(() async {
+      statusLoad();
       if (Platform.isAndroid) {
         //* Android
         final AppUpdateInfo appUpdateInfo = await InAppUpdate.checkForUpdate();
@@ -35,6 +38,10 @@ class VersionCheckerManager with WidgetStatusMixin {
     })
       ..listen((updateAvaible) {
         statusDone();
+      })
+      ..handleError((error) {
+        lastErrorCommand(error);
+        statusError();
       });
   }
 }
@@ -43,8 +50,9 @@ class VersionCheckerWidget extends StatefulWidget {
   final VersionCheckerManager manager;
   final Function(bool) onUpdateAvaible;
   final Widget Function() onLoading;
+  final Function(Exception) onError;
 
-  const VersionCheckerWidget({Key key, @required this.manager, this.onUpdateAvaible, this.onLoading}) : super(key: key);
+  const VersionCheckerWidget({Key key, @required this.manager, @required this.onUpdateAvaible, this.onLoading, this.onError}) : super(key: key);
 
   @override
   _VersionCheckerWidgetState createState() => _VersionCheckerWidgetState();
@@ -54,7 +62,7 @@ class _VersionCheckerWidgetState extends State<VersionCheckerWidget> {
   @override
   void initState() {
     super.initState();
-    widget.manager.checkUpdate();
+    widget.manager.checkUpdateCommand();
   }
 
   @override
@@ -62,10 +70,20 @@ class _VersionCheckerWidgetState extends State<VersionCheckerWidget> {
     return WidgetStatusHandler(
       manager: widget.manager.widgetStatusManager,
       onDone: (setting) {
-        return widget.onUpdateAvaible(widget.manager.checkUpdate.lastResult ?? false);
+        return widget.onUpdateAvaible(widget.manager.checkUpdateCommand.lastResult ?? false);
       },
       onLoading: (setting) {
-        return widget.onLoading();
+        if (widget.onLoading != null) {
+          return widget.onLoading();
+        } else {
+          return Container();
+        }
+      },
+      onError: (setting) {
+        if (widget.onError != null) {
+          widget.onError(widget.manager.lastErrorCommand.lastResult);
+        }
+        return Container();
       },
     );
   }
