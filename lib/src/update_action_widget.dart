@@ -7,17 +7,18 @@ import 'package:version_checker/src/version_info.dart';
 
 class UpdateActionWidget extends StatelessWidget {
   final VersionInfo versionInfo;
-  final String infoText;
+  final Widget infoWidget;
   final TextStyle textStyle;
   final String updateButtonText;
   final TextStyle updateButtonTextStyle;
   final String exitButonText;
   final TextStyle exitButonTextStyle;
   final EdgeInsets margin;
+
   const UpdateActionWidget({
     Key key,
     @required this.versionInfo,
-    this.infoText = "Uygulamanın yeni versiyonu mevcut.\nLütfen uygulamayı kullanmak için yeni versiyonu yükleyin.",
+    this.infoWidget,
     this.textStyle = const TextStyle(
       fontSize: 16,
     ),
@@ -34,15 +35,7 @@ class UpdateActionWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
-            child: Text(
-              infoText,
-              style: textStyle,
-            ),
-          ),
-          SizedBox(
-            height: 40,
-          ),
+          infoWidget ?? Container(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
