@@ -41,7 +41,7 @@ class VersionCheckerManager with WidgetStatusMixin {
         final int localVersion = int.parse(packageInfo.version.replaceAll(".", ""));
 
         final versionInfo = VersionInfo(
-          updateAvaible: storeVesion != localVersion,
+          updateAvaible: storeVesion > localVersion,
           newVersion: storeVersionInfo,
           appId: trackId(results),
         );

@@ -59,7 +59,9 @@ class UpdateActionWidget extends StatelessWidget {
                       androidAppId: versionInfo.appId,
                     );
                   } else if (Platform.isIOS) {
-                    StoreRedirect.redirect(iOSAppId: versionInfo.appId);
+                    StoreRedirect.redirect(
+                      iOSAppId: versionInfo.appId,
+                    );
                   }
                 },
               ),
