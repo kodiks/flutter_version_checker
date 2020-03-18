@@ -52,8 +52,7 @@ class VersionCheckerManager with WidgetStatusMixin {
       ..listen((versionInfo) {
         statusDone();
       })
-      ..thrownExceptions
-      ..listen((error) {
+      ..thrownExceptions.listen((error) {
         statusError();
         lastErrorCommand(error);
       });
