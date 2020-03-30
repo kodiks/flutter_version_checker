@@ -15,7 +15,7 @@ class VersionCheckerManager with WidgetStatusMixin {
   VersionCheckerManager() {
     lastErrorCommand = RxCommand.createSync((error) => error);
     checkUpdateCommand = RxCommand.createAsyncNoParam(() async {
-      statusLoad();
+      widgetStatusManager.load();
       //* Get instaled app version
       final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
@@ -50,10 +50,10 @@ class VersionCheckerManager with WidgetStatusMixin {
       }
     })
       ..listen((versionInfo) {
-        statusDone();
+        widgetStatusManager.done();
       })
       ..thrownExceptions.listen((error) {
-        statusError();
+        widgetStatusManager.error();
         lastErrorCommand(error);
       });
   }

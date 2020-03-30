@@ -1,6 +1,6 @@
 name: version_checker
 description: A new Flutter package project.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/kodiks/flutter_version_checker.git
 
 environment:
@@ -14,6 +14,7 @@ dependencies:
   upgrader: ^0.10.1
   package_info: ^0.4.0+14
   store_redirect: ^1.0.2
+
   status_handler:
     git:
       url: git@github.com:kodiks/flutter_status_handler.git
