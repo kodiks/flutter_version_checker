@@ -17,7 +17,7 @@ dependencies:
 
   status_handler:
     git:
-      url: git@github.com:kodiks/flutter_status_handler.git
+      url: https://github.com/kodiks/flutter_status_handler.git
 
 dev_dependencies:
   flutter_test:
