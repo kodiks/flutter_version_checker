@@ -6,7 +6,9 @@ import 'package:package_info/package_info.dart';
 import 'package:rx_command/rx_command.dart';
 import 'package:status_handler/status_handler.dart';
 import 'package:upgrader/upgrader.dart';
+import 'package:version/version.dart';
 import 'package:version_checker/src/version_info.dart';
+// region [p]
 
 class VersionCheckerManager with WidgetStatusMixin {
   RxCommand<void, VersionInfo> checkUpdateCommand;
@@ -25,6 +27,7 @@ class VersionCheckerManager with WidgetStatusMixin {
         final versionInfo = VersionInfo(
           updateAvaible: appUpdateInfo.updateAvailable,
           newVersion: appUpdateInfo.availableVersionCode.toString(),
+          localVersion: packageInfo.version,
           appId: packageInfo.packageName,
         );
 
@@ -37,11 +40,12 @@ class VersionCheckerManager with WidgetStatusMixin {
 
         final storeVersionInfo = ITunesResults.version(results);
 
-        final int storeVesion = int.parse(storeVersionInfo.replaceAll(".", ""));
-        final int localVersion = int.parse(packageInfo.version.replaceAll(".", ""));
+        Version storeVersion = Version.parse(storeVersionInfo);
+        Version localVersion = Version.parse(packageInfo.version);
 
         final versionInfo = VersionInfo(
-          updateAvaible: storeVesion > localVersion,
+          updateAvaible: storeVersion > localVersion,
+          localVersion: packageInfo.version,
           newVersion: storeVersionInfo,
           appId: trackId(results),
         );
@@ -69,6 +73,7 @@ class VersionCheckerManager with WidgetStatusMixin {
   }
 }
 
+// endregion
 class VersionCheckerWidget extends StatefulWidget {
   final VersionCheckerManager manager;
   final Widget Function(VersionInfo) onUpdateAvaible;
