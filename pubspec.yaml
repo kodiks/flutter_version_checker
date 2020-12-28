@@ -9,16 +9,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  rx_command: ^5.2.0
-
-  in_app_update: ^1.1.7
-  upgrader: ^0.11.1
-  package_info: ^0.4.1
-  store_redirect: ^1.0.2
-
   status_handler:
     path: ../../Flutter Packages/status_handler
+  device_info: ^1.0.0
+  in_app_update: ^1.1.14
+  package_info: ^0.4.1
+  rx_command: ^5.2.0
+  store_redirect: ^1.0.2
+  upgrader: ^2.7.3
   version: ^1.2.0
 
 dev_dependencies:
@@ -58,4 +56,3 @@ flutter: null
 #
 # For details regarding fonts in packages, see
 # https://flutter.dev/custom-fonts/#from-packages
-

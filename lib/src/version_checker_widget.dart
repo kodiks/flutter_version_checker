@@ -14,6 +14,12 @@ class VersionCheckerManager with WidgetStatusMixin {
   RxCommand<void, VersionInfo> checkUpdateCommand;
   RxCommand<dynamic, dynamic> lastErrorCommand;
 
+  bool get updateAvaible {
+    return checkUpdateCommand.lastResult?.updateAvaible ?? false;
+  }
+
+  VersionInfo get versionInfo => checkUpdateCommand.lastResult;
+
   VersionCheckerManager() {
     lastErrorCommand = RxCommand.createSync((error) => error);
     checkUpdateCommand = RxCommand.createAsyncNoParam(() async {
@@ -24,6 +30,7 @@ class VersionCheckerManager with WidgetStatusMixin {
       if (Platform.isAndroid) {
         //* Android
         final AppUpdateInfo appUpdateInfo = await InAppUpdate.checkForUpdate();
+
         final versionInfo = VersionInfo(
           updateAvaible: appUpdateInfo.updateAvailable,
           newVersion: appUpdateInfo.availableVersionCode.toString(),
@@ -38,19 +45,20 @@ class VersionCheckerManager with WidgetStatusMixin {
 
         final results = await iTunes.lookupByBundleId(packageInfo.packageName);
 
-        final storeVersionInfo = ITunesResults.version(results);
+        final storeVersionInfo = ITunesResults.version(results).replaceAll(RegExp("[^0-9.]"), '');
+        var localVersionInfo = packageInfo.version.replaceAll(RegExp("[^0-9.]"), '');
 
         Version storeVersion = Version.parse(storeVersionInfo);
         Version localVersion = Version.parse(packageInfo.version);
 
         final versionInfo = VersionInfo(
           updateAvaible: storeVersion > localVersion,
-          localVersion: packageInfo.version,
+          localVersion: localVersionInfo,
           newVersion: storeVersionInfo,
           appId: trackId(results),
         );
 
-        return Future.value(versionInfo);
+        return Future.value(null);
       }
     })
       ..listen((versionInfo) {

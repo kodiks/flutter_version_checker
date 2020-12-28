@@ -4,5 +4,5 @@ class VersionInfo {
   final bool updateAvaible;
   final String appId;
 
-  VersionInfo({this.newVersion, this.localVersion, this.updateAvaible, this.appId});
+  VersionInfo({this.newVersion, this.localVersion, this.updateAvaible = false, this.appId});
 }
